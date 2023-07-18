@@ -1,7 +1,14 @@
 const express = require('express');
+const Joi = require('joi');
 const router = express.Router();
 const contacts = require('../../models/contacts');
 const { HttpError } = require('../../helpers');
+
+const schema = Joi.object({
+  name: Joi.string().required(),
+  email: Joi.string().required(),
+  phone: Joi.string().required(),
+});
 
 // Give data for front
 router.get('/', async (_, res, next) => {
@@ -32,8 +39,12 @@ router.get('/:contactId', async (req, res, next) => {
 // Add a new contact to base data
 router.post('/', async (req, res, next) => {
   try {
+    const { error } = schema.validate(req.body);
+    if (error) {
+      throw HttpError(400, 'missing required name field');
+    }
+
     const result = await contacts.addContact(req.body);
-    console.log(result);
     res.status(201).json(result);
   } catch (error) {
     next(error);
@@ -56,14 +67,19 @@ router.delete('/:contactId', async (req, res, next) => {
   }
 });
 
-// Change contact data by id
+// Update contact data by id
 router.put('/:contactId', async (req, res, next) => {
   try {
+    const { error } = schema.validate(req.body);
+    if (error) {
+      throw HttpError(400, 'missing fields');
+    }
+
     const { contactId } = req.params;
     const result = await contacts.updateContact(contactId, req.body);
 
     if (!result) {
-      throw HttpError(404, 'Not foundssss');
+      throw HttpError(404, 'Not found');
     }
 
     res.json(result);
