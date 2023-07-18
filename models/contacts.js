@@ -1,6 +1,5 @@
 const fs = require('fs/promises');
 const path = require('path');
-// const { nanoid } = require('nanoid');
 const generateID = async () => {
   const { nanoid } = await import('nanoid');
 
@@ -57,7 +56,7 @@ const updateContact = async (contactId, body) => {
     return null;
   }
 
-  contacts[index] = { contactId, ...body };
+  contacts[index] = { id: contactId, ...body };
   await changeContacts(contacts);
   return contacts[index];
 };
