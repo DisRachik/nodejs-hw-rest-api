@@ -7,4 +7,8 @@ const schemaContact = Joi.object({
   favorite: Joi.boolean(),
 });
 
-module.exports = schemaContact;
+const schemaUpdateFavoriteForContact = Joi.object({
+  favorite: Joi.boolean().required(),
+});
+
+module.exports = { schemaContact, schemaUpdateFavoriteForContact };

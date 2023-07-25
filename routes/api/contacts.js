@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const controller = require('../../controllers');
 const { validateInputContact } = require('../../decorators');
-const { schemaContact } = require('../../schemas');
+const { schemaContact, schemaUpdateFavoriteForContact } = require('../../schemas');
 const { isValidId } = require('../../middlewares');
 
 // Give data for front
@@ -18,6 +18,19 @@ router.post('/', validateInputContact(schemaContact), controller.addNewContact);
 router.delete('/:contactId', isValidId, controller.removeContact);
 
 // Update contact data by id
-router.put('/:contactId', validateInputContact(schemaContact), isValidId, controller.updateById);
+router.put(
+  '/:contactId',
+  validateInputContact(schemaContact),
+  isValidId,
+  controller.updateFavorite
+);
+
+// Update contact data by id
+router.patch(
+  '/:contactId/favorite',
+  validateInputContact(schemaUpdateFavoriteForContact),
+  isValidId,
+  controller.updateById
+);
 
 module.exports = router;
