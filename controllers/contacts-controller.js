@@ -14,7 +14,6 @@ const listContacts = async (_, res) => {
   });
 };
 
-//дописати помилку при невалідному id
 const getById = async (req, res) => {
   const { contactId } = req.params;
   const result = await ContactsModel.findById(contactId);
@@ -43,7 +42,6 @@ const addNewContact = async (req, res) => {
   });
 };
 
-//дописати помилку при невалідному id
 const removeContact = async (req, res) => {
   const { contactId } = req.params;
   const result = await ContactsModel.findByIdAndDelete(contactId);
@@ -52,7 +50,7 @@ const removeContact = async (req, res) => {
     throw HttpError(404, 'Not found');
   }
 
-  resstatus(200).json({
+  res.status(200).json({
     status: 'deleted',
     code: 200,
   });
@@ -60,7 +58,7 @@ const removeContact = async (req, res) => {
 
 const updateById = async (req, res) => {
   const { contactId } = req.params;
-  const result = await ContactsModel.findByIdAndUpdate(contactId, req.body);
+  const result = await ContactsModel.findByIdAndUpdate(contactId, req.body, { new: true });
 
   if (!result) {
     throw HttpError(404, 'Not found');
