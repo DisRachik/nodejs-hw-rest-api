@@ -1,3 +1,3 @@
-const schemaContact = require('./contacts-schema');
+const { schemaContact, schemaUpdateFavoriteForContact } = require('./contacts-schema');
 
-module.exports = { schemaContact };
+module.exports = { schemaContact, schemaUpdateFavoriteForContact };
