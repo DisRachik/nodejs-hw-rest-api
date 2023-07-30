@@ -50,6 +50,7 @@ const login = async (req, res) => {
   const { _id: id, email: userEmail, subscription } = user;
 
   const token = jwt.sign({ id }, JWT_SECRET, { expiresIn: '23h' });
+  await UsersModel.findByIdAndUpdate(id, { token });
 
   res.status(200).json({
     status: 'success',
@@ -59,7 +60,14 @@ const login = async (req, res) => {
   });
 };
 
+const logout = async (req, res) => {
+  await UsersModel.findByIdAndUpdate(req.user._id, { token: '' });
+
+  res.status(204);
+};
+
 module.exports = {
   register: decorators.ctrlWrapper(register),
   login: decorators.ctrlWrapper(login),
+  logout: decorators.ctrlWrapper(logout),
 };

@@ -6,7 +6,7 @@ const { HttpError } = require('../helpers');
 
 const { JWT_SECRET } = process.env;
 
-const authenticate = async (req, res, next) => {
+const authenticate = async (req, _, next) => {
   const { authorization = '' } = req.headers;
   const [bearer, token] = authorization.split(' ');
 
@@ -17,7 +17,7 @@ const authenticate = async (req, res, next) => {
   try {
     const { id } = jwt.verify(token, JWT_SECRET);
     const user = await UsersModel.findById(id);
-    if (!user) {
+    if (!user || !user.token) {
       throw HttpError(401, 'Not authorized');
     }
 

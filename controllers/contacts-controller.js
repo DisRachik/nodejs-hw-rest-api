@@ -8,7 +8,7 @@ const listContacts = async (req, res) => {
     status: 'success',
     code: 200,
     data: {
-      contact: result,
+      contacts: result,
     },
   });
 };
