@@ -1,28 +1,28 @@
 const express = require('express');
 const router = express.Router();
-const controller = require('../../controllers');
+const { contactsController } = require('../../controllers');
 const { validateInputContact } = require('../../decorators');
 const { schemaContact, schemaUpdateFavoriteForContact } = require('../../schemas');
 const { isValidId } = require('../../middlewares');
 
 // Give data for front
-router.get('/', controller.listContacts);
+router.get('/', contactsController.listContacts);
 
 // Give data about 1 contact by id
-router.get('/:contactId', isValidId, controller.getById);
+router.get('/:contactId', isValidId, contactsController.getById);
 
 // Add a new contact to base data
-router.post('/', validateInputContact(schemaContact), controller.addNewContact);
+router.post('/', validateInputContact(schemaContact), contactsController.addNewContact);
 
 // Delete contacts from base data by id
-router.delete('/:contactId', isValidId, controller.removeContact);
+router.delete('/:contactId', isValidId, contactsController.removeContact);
 
 // Update contact data by id
 router.put(
   '/:contactId',
   validateInputContact(schemaContact),
   isValidId,
-  controller.updateFavorite
+  contactsController.updateFavorite
 );
 
 // Update contact data by id
@@ -30,7 +30,7 @@ router.patch(
   '/:contactId/favorite',
   validateInputContact(schemaUpdateFavoriteForContact),
   isValidId,
-  controller.updateById
+  contactsController.updateById
 );
 
 module.exports = router;
