@@ -15,4 +15,7 @@ authRouter.post('/login', validateInputContact(schemaUser), authController.login
 // Sign out
 authRouter.post('/logout', authenticate, authController.logout);
 
+// Token validity check
+authRouter.get('/current', authenticate, authController.getCurrent);
+
 module.exports = authRouter;

@@ -66,8 +66,18 @@ const logout = async (req, res) => {
   res.status(204);
 };
 
+const getCurrent = (req, res) => {
+  const { email, subscription } = req.user;
+  res.status(200).json({
+    status: 'success',
+    code: 200,
+    user: { email, subscription },
+  });
+};
+
 module.exports = {
   register: decorators.ctrlWrapper(register),
   login: decorators.ctrlWrapper(login),
   logout: decorators.ctrlWrapper(logout),
+  getCurrent: decorators.ctrlWrapper(getCurrent),
 };
