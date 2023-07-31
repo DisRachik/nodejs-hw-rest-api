@@ -1,8 +1,8 @@
 const express = require('express');
 const authRouter = express.Router();
 
-const { schemaUser } = require('../../schemas');
-const { authenticate } = require('../../middlewares');
+const { schemaUser, schemaUpdateSubscriptionForUser } = require('../../schemas');
+const { isValidId, authenticate } = require('../../middlewares');
 const { authController } = require('../../controllers');
 const { validateInputContact } = require('../../decorators');
 
@@ -17,5 +17,13 @@ authRouter.post('/logout', authenticate, authController.logout);
 
 // Token validity check
 authRouter.get('/current', authenticate, authController.getCurrent);
+
+// Update subscription for user by id
+authRouter.patch(
+  '/',
+  validateInputContact(schemaUpdateSubscriptionForUser),
+  isValidId,
+  authController.updateSubscription
+);
 
 module.exports = authRouter;

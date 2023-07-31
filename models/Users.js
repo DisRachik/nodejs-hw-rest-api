@@ -1,6 +1,6 @@
 const { Schema, model } = require('mongoose');
 const { handleUpdateValidate, handleSaveError } = require('./hooks');
-const { emailRegex } = require('../constants');
+const { emailRegex, allowedSubscriptions } = require('../constants');
 
 const usersSchema = new Schema(
   {
@@ -17,7 +17,7 @@ const usersSchema = new Schema(
     },
     subscription: {
       type: String,
-      enum: ['starter', 'pro', 'business'],
+      enum: allowedSubscriptions,
       default: 'starter',
     },
     token: String,
