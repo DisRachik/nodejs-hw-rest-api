@@ -2,12 +2,17 @@ const express = require('express');
 const authRouter = express.Router();
 
 const { schemaUser, schemaUpdateSubscriptionForUser } = require('../../schemas');
-const { isValidId, authenticate } = require('../../middlewares');
+const { isValidId, authenticate, upload } = require('../../middlewares');
 const { authController } = require('../../controllers');
 const { validateInputContact } = require('../../decorators');
 
 // New user registration
-authRouter.post('/register', validateInputContact(schemaUser), authController.register);
+authRouter.post(
+  '/register',
+  upload.single('avatar'),
+  validateInputContact(schemaUser),
+  authController.register
+);
 
 // Sign in
 authRouter.post('/login', validateInputContact(schemaUser), authController.login);
