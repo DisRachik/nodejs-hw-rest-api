@@ -1,5 +1,6 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const gravatar = require('gravatar');
 require('dotenv').config();
 
 const { UsersModel } = require('../models');
@@ -22,8 +23,9 @@ const register = async (req, res) => {
     ...req.body,
     email: email.toLowerCase(),
     password: hashPassword,
+    avatarURL: gravatar.url(email),
   });
-  const { email: userEmail, subscription } = createdUser;
+  const { email: userEmail, subscription, avatarURL } = createdUser;
 
   res.status(201).json({
     status: 'created',
@@ -31,6 +33,7 @@ const register = async (req, res) => {
     user: {
       email: userEmail,
       subscription,
+      avatarURL,
     },
   });
 };
