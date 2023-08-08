@@ -1,9 +1,10 @@
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const gravatar = require('gravatar');
 require('dotenv').config();
 const path = require('path');
 const fs = require('fs/promises');
+
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const gravatar = require('gravatar');
 
 const { UsersModel } = require('../models');
 const decorators = require('../decorators');
@@ -96,9 +97,11 @@ const updateSubscription = async (req, res) => {
 const updateAvatar = async (req, res) => {
   const { path: oldPath, filename } = req.file;
   const newPath = path.join(avatarPath, filename);
+
   await fs.rename(oldPath, newPath);
 
   const avatarURL = path.join('public', 'avatars', filename);
+
   const { avatarURL: newUrl } = await UsersModel.findByIdAndUpdate(req.user._id, { avatarURL });
 
   res.status(200).json({
