@@ -2,6 +2,8 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const gravatar = require('gravatar');
 require('dotenv').config();
+const path = require('path');
+const fs = require('fs/promises');
 
 const { UsersModel } = require('../models');
 const decorators = require('../decorators');
@@ -9,13 +11,9 @@ const { HttpError } = require('../helpers');
 
 const { JWT_SECRET } = process.env;
 
-const register = async (req, res) => {
-  // Варіант перевірки на дубль email без хука
-  // const user = await UsersModel.findOne(req.body.email);
-  // if (user) {
-  //   throw HttpError(409, 'Email in use');
-  // }
+const avatarPath = path.resolve('public', 'avatars');
 
+const register = async (req, res) => {
   const { email, password } = req.body;
   const hashPassword = await bcrypt.hash(password, 10);
 
@@ -95,10 +93,28 @@ const updateSubscription = async (req, res) => {
   });
 };
 
+const updateAvatar = async (req, res) => {
+  const { path: oldPath, filename } = req.file;
+  const newPath = path.join(avatarPath, filename);
+  await fs.rename(oldPath, newPath);
+
+  const avatarURL = path.join('public', 'avatars', filename);
+  const { avatarURL: newUrl } = await UsersModel.findByIdAndUpdate(req.user._id, { avatarURL });
+
+  res.status(200).json({
+    status: 'success',
+    code: 200,
+    data: {
+      avatarURL: newUrl,
+    },
+  });
+};
+
 module.exports = {
   register: decorators.ctrlWrapper(register),
   login: decorators.ctrlWrapper(login),
   logout: decorators.ctrlWrapper(logout),
   getCurrent: decorators.ctrlWrapper(getCurrent),
   updateSubscription: decorators.ctrlWrapper(updateSubscription),
+  updateAvatar: decorators.ctrlWrapper(updateAvatar),
 };

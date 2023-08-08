@@ -7,12 +7,7 @@ const { authController } = require('../../controllers');
 const { validateInputContact } = require('../../decorators');
 
 // New user registration
-authRouter.post(
-  '/register',
-  upload.single('avatar'),
-  validateInputContact(schemaUser),
-  authController.register
-);
+authRouter.post('/register', validateInputContact(schemaUser), authController.register);
 
 // Sign in
 authRouter.post('/login', validateInputContact(schemaUser), authController.login);
@@ -29,6 +24,16 @@ authRouter.patch(
   validateInputContact(schemaUpdateSubscriptionForUser),
   isValidId,
   authController.updateSubscription
+);
+
+// Update avatar
+authRouter.patch(
+  '/avatars',
+  authenticate,
+  upload.single('avatar'),
+  // validateInputContact(schemaUpdateSubscriptionForUser),
+  // isValidId,
+  authController.updateAvatar
 );
 
 module.exports = authRouter;
