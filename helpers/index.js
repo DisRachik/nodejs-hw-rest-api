@@ -1,3 +1,4 @@
 const HttpError = require('./HttpError');
+const deleteOldImg = require('./deleteOldImg');
 
-module.exports = { HttpError };
+module.exports = { HttpError, deleteOldImg };

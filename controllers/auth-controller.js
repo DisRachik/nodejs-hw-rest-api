@@ -8,7 +8,7 @@ const gravatar = require('gravatar');
 
 const { UsersModel } = require('../models');
 const decorators = require('../decorators');
-const { HttpError } = require('../helpers');
+const { HttpError, deleteOldImg } = require('../helpers');
 
 const { JWT_SECRET } = process.env;
 
@@ -95,6 +95,7 @@ const updateSubscription = async (req, res) => {
 };
 
 const updateAvatar = async (req, res) => {
+  const { _id, avatarURL: oldAvatarUrl } = req.user;
   const { path: oldPath, filename } = req.file;
   const newPath = path.join(avatarPath, filename);
 
@@ -102,7 +103,7 @@ const updateAvatar = async (req, res) => {
 
   const avatarURL = path.join('public', 'avatars', filename);
 
-  const { avatarURL: newUrl } = await UsersModel.findByIdAndUpdate(req.user._id, { avatarURL });
+  const { avatarURL: newUrl } = await UsersModel.findByIdAndUpdate(_id, { avatarURL });
 
   res.status(200).json({
     status: 'success',
@@ -111,6 +112,8 @@ const updateAvatar = async (req, res) => {
       avatarURL: newUrl,
     },
   });
+
+  deleteOldImg(oldAvatarUrl);
 };
 
 module.exports = {

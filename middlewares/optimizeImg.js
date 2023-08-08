@@ -3,7 +3,7 @@ const Jimp = require('jimp');
 
 const { HttpError } = require('../helpers');
 
-const optimizeImg = async (req, res, next) => {
+const optimizeImg = async (req, _, next) => {
   if (!req.file) {
     return next(HttpError(400, 'No image submitted.'));
   }
