@@ -2,28 +2,38 @@ const express = require('express');
 const authRouter = express.Router();
 
 const { schemaUser, schemaUpdateSubscriptionForUser } = require('../../schemas');
-const { isValidId, authenticate } = require('../../middlewares');
-const { authController } = require('../../controllers');
+const { isValidId, authenticate, upload } = require('../../middlewares');
 const { validateInputContact } = require('../../decorators');
+const {
+  register,
+  login,
+  logout,
+  getCurrent,
+  updateSubscription,
+  updateAvatar,
+} = require('../../controllers/auth');
 
 // New user registration
-authRouter.post('/register', validateInputContact(schemaUser), authController.register);
+authRouter.post('/register', validateInputContact(schemaUser), register);
 
 // Sign in
-authRouter.post('/login', validateInputContact(schemaUser), authController.login);
+authRouter.post('/login', validateInputContact(schemaUser), login);
 
 // Sign out
-authRouter.post('/logout', authenticate, authController.logout);
+authRouter.post('/logout', authenticate, logout);
 
 // Token validity check
-authRouter.get('/current', authenticate, authController.getCurrent);
+authRouter.get('/current', authenticate, getCurrent);
 
 // Update subscription for user by id
 authRouter.patch(
   '/',
   validateInputContact(schemaUpdateSubscriptionForUser),
   isValidId,
-  authController.updateSubscription
+  updateSubscription
 );
+
+// Update avatar
+authRouter.patch('/avatars', authenticate, upload.single('avatar'), updateAvatar);
 
 module.exports = authRouter;
