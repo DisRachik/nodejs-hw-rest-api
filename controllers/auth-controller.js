@@ -8,7 +8,7 @@ const gravatar = require('gravatar');
 
 const { UsersModel } = require('../models');
 const decorators = require('../decorators');
-const { HttpError, deleteOldImg } = require('../helpers');
+const { HttpError, deleteOldImg, optimizeImg } = require('../helpers');
 
 const { JWT_SECRET } = process.env;
 
@@ -49,7 +49,7 @@ const login = async (req, res) => {
     throw HttpError(401, 'Email or password is wrong');
   }
 
-  const { _id: id, email: userEmail, subscription } = user;
+  const { _id: id, email: userEmail, subscription, avatarURL } = user;
 
   const token = jwt.sign({ id }, JWT_SECRET, { expiresIn: '23h' });
   await UsersModel.findByIdAndUpdate(id, { token });
@@ -58,7 +58,7 @@ const login = async (req, res) => {
     status: 'success',
     code: 200,
     token,
-    user: { email: userEmail, subscription },
+    user: { email: userEmail, subscription, avatarURL },
   });
 };
 
@@ -99,11 +99,17 @@ const updateAvatar = async (req, res) => {
   const { path: oldPath, filename } = req.file;
   const newPath = path.join(avatarPath, filename);
 
+  await optimizeImg(oldPath);
+
   await fs.rename(oldPath, newPath);
 
   const avatarURL = path.join('public', 'avatars', filename);
 
-  const { avatarURL: newUrl } = await UsersModel.findByIdAndUpdate(_id, { avatarURL });
+  const { avatarURL: newUrl } = await UsersModel.findByIdAndUpdate(
+    _id,
+    { avatarURL },
+    { new: true }
+  );
 
   res.status(200).json({
     status: 'success',

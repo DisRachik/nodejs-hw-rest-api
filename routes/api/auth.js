@@ -2,7 +2,7 @@ const express = require('express');
 const authRouter = express.Router();
 
 const { schemaUser, schemaUpdateSubscriptionForUser } = require('../../schemas');
-const { isValidId, authenticate, upload, optimizeImg } = require('../../middlewares');
+const { isValidId, authenticate, upload } = require('../../middlewares');
 const { authController } = require('../../controllers');
 const { validateInputContact } = require('../../decorators');
 
@@ -27,12 +27,6 @@ authRouter.patch(
 );
 
 // Update avatar
-authRouter.patch(
-  '/avatars',
-  authenticate,
-  upload.single('avatar'),
-  optimizeImg,
-  authController.updateAvatar
-);
+authRouter.patch('/avatars', authenticate, upload.single('avatar'), authController.updateAvatar);
 
 module.exports = authRouter;
