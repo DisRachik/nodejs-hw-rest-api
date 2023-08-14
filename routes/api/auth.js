@@ -6,6 +6,7 @@ const { isValidId, authenticate, upload } = require('../../middlewares');
 const { validateInputContact } = require('../../decorators');
 const {
   register,
+  verifyEmail,
   login,
   logout,
   getCurrent,
@@ -17,7 +18,7 @@ const {
 authRouter.post('/register', validateInputContact(schemaUser), register);
 
 // Verification Email
-// authRouter.post('/verify/:verificationToken', verifyEmail);
+authRouter.get('/verify/:verificationToken', verifyEmail);
 
 // Sign in
 authRouter.post('/login', validateInputContact(schemaUser), login);
