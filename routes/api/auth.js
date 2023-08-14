@@ -16,6 +16,9 @@ const {
 // New user registration
 authRouter.post('/register', validateInputContact(schemaUser), register);
 
+// Verification Email
+// authRouter.post('/verify/:verificationToken', verifyEmail);
+
 // Sign in
 authRouter.post('/login', validateInputContact(schemaUser), login);
 
