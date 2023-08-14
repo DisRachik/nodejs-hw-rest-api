@@ -1,12 +1,13 @@
 const express = require('express');
 const authRouter = express.Router();
 
-const { schemaUser, schemaUpdateSubscriptionForUser } = require('../../schemas');
+const { schemaUser, schemaUpdateSubscriptionForUser, schemaUserEmail } = require('../../schemas');
 const { isValidId, authenticate, upload } = require('../../middlewares');
 const { validateInputContact } = require('../../decorators');
 const {
   register,
   verifyEmail,
+  resendVerifyEmail,
   login,
   logout,
   getCurrent,
@@ -19,6 +20,9 @@ authRouter.post('/register', validateInputContact(schemaUser), register);
 
 // Verification Email
 authRouter.get('/verify/:verificationToken', verifyEmail);
+
+// re-sending an email to the user with a link for verification
+authRouter.post('/verify', validateInputContact(schemaUserEmail), resendVerifyEmail);
 
 // Sign in
 authRouter.post('/login', validateInputContact(schemaUser), login);

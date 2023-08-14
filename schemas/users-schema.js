@@ -18,4 +18,11 @@ const schemaUpdateSubscriptionForUser = Joi.object({
     }),
 });
 
-module.exports = { schemaUser, schemaUpdateSubscriptionForUser };
+const schemaUserEmail = Joi.object({
+  email: Joi.string().pattern(emailRegex).required().messages({
+    'any.required': 'missing required field email',
+    'string.pattern.base': 'invalid email format',
+  }),
+});
+
+module.exports = { schemaUser, schemaUpdateSubscriptionForUser, schemaUserEmail };
